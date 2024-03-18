@@ -59,10 +59,36 @@ app.post('/api/notes', (request, response) => {
     important: Boolean(body.important) || false,
     id: generateId(),
   }
-
+  console.log(note.id)
   notes = notes.concat(note)
 
   response.json(note)
+})
+
+app.put('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const body = request.body
+
+  if (!body.content) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
+  }
+
+  const note = {
+    content: body.content,
+    important: Boolean(body.important) || false,
+    id: id,
+  }
+  response.json(note)
+
+})
+
+app.delete('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  notes = notes.filter(note => note.id !== id)
+
+  response.status(204).end()
 })
 
 const PORT = 3001
